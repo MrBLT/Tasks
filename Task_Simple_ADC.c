@@ -35,6 +35,8 @@
 //
 //	Gloabal subroutines and variables
 //
+uint32_t ADC_Value_Avg;
+int Run_Time = 0;
 
 extern void Task_Simple_ADC0_Ch0( void *pvParameters ) {
 
@@ -42,6 +44,10 @@ extern void Task_Simple_ADC0_Ch0( void *pvParameters ) {
 	//	Measured voltage value
 	//
 	uint32_t	ADC_Value;
+	uint32_t	ADC_Value_Array[10];
+	int 		ADC_Value_Position = 0;
+	int 		i;
+	uint32_t 		sum;
 
 	//
 	//	Enable (power-on) ADC0
@@ -81,13 +87,31 @@ extern void Task_Simple_ADC0_Ch0( void *pvParameters ) {
 		ADCIntClear( ADC0_BASE, 0 );
 
 		//
-		//	Print ADC_Value
+		// Insert the value into a position in the array
 		//
-//		printf( ">>ADC_Value: %d\n", ADC_Value );
+		if( ADC_Value_Position == 10) {
+			ADC_Value_Position = 0;
+			Run_Time++;
+			sum = 0;
+			for(i = 0; i <= 9; i++){
+				sum += ADC_Value_Array[i];
+			}
+			ADC_Value_Avg = sum/10;
+			//
+			//	Print ADC_Value
+			//
+			printf( ">>Run_Time: %d, ", Run_Time );
+			printf( "ADC_Value_Avg: %d\n", ADC_Value_Avg );
+		} else {
+			ADC_Value_Array[ADC_Value_Position] = ADC_Value;
+			ADC_Value_Position++;
+		}
+
+
 
 		//
-		//	Delay one (1) second.
+		//	Delay 100 ms.
 		//
-		vTaskDelay( (1000 * configTICK_RATE_HZ) / 1000 );
+		vTaskDelay( (configTICK_RATE_HZ) / 10 );
 	}
 }
