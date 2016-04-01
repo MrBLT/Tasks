@@ -49,7 +49,13 @@ extern void Task_Blink_LED_D1( void *pvParameters ) {
 		LED_Data = LED_Data ^ 0x02;
         GPIOPinWrite( GPIO_PORTN_BASE, GPIO_PIN_1, LED_Data );
 
-		vTaskDelay( ( 5000 * configTICK_RATE_HZ ) / 10000 );
+		vTaskDelay( 10 );
+
+		LED_Data = GPIOPinRead( GPIO_PORTN_BASE, GPIO_PIN_1 );
+		LED_Data = LED_Data ^ 0x02;
+        GPIOPinWrite( GPIO_PORTN_BASE, GPIO_PIN_1, LED_Data );
+
+		vTaskDelay( 990 );
 	}
 }
 
