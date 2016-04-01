@@ -34,7 +34,7 @@ extern void Task_ReportTime( void *pvParameters ) {
 	//	Enter task loop
 	//
 	while ( 1 ) {
-		printf( "SysTickTime: %3d, ", xPortSysTickCount/1000 );
+		printf( "%3d,", xPortSysTickCount/1000 );
 
 		vTaskDelay( configTICK_RATE_HZ );
 	}
