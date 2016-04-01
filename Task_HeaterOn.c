@@ -32,7 +32,7 @@
 #include	"stdio.h"
 
 #define		TimeBase_mS		1000
-#define		OnTime_mS		500
+#define		OnTime_mS		750
 #define		OffTime_mS		( TimeBase_mS - OnTime_mS )
 
 extern void Task_HeaterOn( void *pvParameters ) {
