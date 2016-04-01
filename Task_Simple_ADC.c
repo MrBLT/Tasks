@@ -7,7 +7,7 @@
 //		Date:			2016-02-29 (B60229)
 //		Version:		1.0
 //
-//		Description:	Sample ADC_0_Channel_0 every 0.5 seconds
+//		Description:	Sample ADC_0_Channel_0 every 0.1 seconds, average 10 samples
 //
 //		Notes:
 //
@@ -35,8 +35,7 @@
 //
 //	Gloabal subroutines and variables
 //
-uint32_t ADC_Value_Avg;
-int Run_Time = 0;
+uint32_t ADC_Value_Avg = 0;
 
 extern void Task_Simple_ADC0_Ch0( void *pvParameters ) {
 
@@ -45,8 +44,8 @@ extern void Task_Simple_ADC0_Ch0( void *pvParameters ) {
 	//
 	uint32_t	ADC_Value;
 	uint32_t	ADC_Value_Array[10];
-	int 		ADC_Value_Position = 0;
-	int 		i;
+	uint32_t 		ADC_Value_Position = 0;
+	uint32_t 		i;
 	uint32_t 		sum;
 
 	//
@@ -89,19 +88,20 @@ extern void Task_Simple_ADC0_Ch0( void *pvParameters ) {
 		//
 		// Insert the value into a position in the array
 		//
-		if( ADC_Value_Position == 10) {
-			ADC_Value_Position = 0;
-			Run_Time++;
+		if( ADC_Value_Position == 9) {
+			ADC_Value_Array[ADC_Value_Position] = ADC_Value;
+
 			sum = 0;
 			for(i = 0; i <= 9; i++){
 				sum += ADC_Value_Array[i];
 			}
 			ADC_Value_Avg = sum/10;
+			ADC_Value_Position = 0;
 			//
 			//	Print ADC_Value
 			//
-			printf( ">>Run_Time: %d, ", Run_Time );
-			printf( "ADC_Value_Avg: %d\n", ADC_Value_Avg );
+
+			//printf( "ADC_Value_Avg: %6d, ", ADC_Value_Avg );
 		} else {
 			ADC_Value_Array[ADC_Value_Position] = ADC_Value;
 			ADC_Value_Position++;
