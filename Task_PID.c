@@ -59,6 +59,8 @@
 				   
 		D = D_Gain * (derivative or rate of change of e)
  */
+#define 	MAX_DUTY_CYCLE 100;
+#define		MIN_DUTY_CYCLE 0;
 
 #include	"FreeRTOS.h"
 #include	"task.h"
@@ -70,36 +72,43 @@
 //
 
 // Reference Desired Temp and Current Temp
-float Desired_Temp = 31.5;
+float Desired_Temp = 30;
 extern float Current_Temp;
 
 // Initiate global output duty cycle
 float MV;
-float P_Gain = 1.1;
-float I_Gain = 1;
-float D_Gain = 1;
+float P_Gain = 10;
+float I_Gain = 0;
+float D_Gain = 0;
 
 extern void Task_PID( void *pvParameters ) {
 
-	float SP, PV, e, sum_e, de, prev_e = 0, P, I, D;
+	float SP, PV, e, integral_e = 0, de, prev_e = 0, P, I, D;
 
 	while (1) {
 
-		SP = Desired_Temp;
-		PV = Current_Temp;
-		e  = SP - PV;
-		sum_e += e;
-		de = e - prev_e;
-		prev_e = e;
+		SP = Desired_Temp;	//Desired Temperature
+		PV = Current_Temp;	//Current Temperature
+		e  = SP - PV;		//error
+		integral_e += e;			//Represents the integral of the error
+		de = e - prev_e;	//Represents the rate of change of the error
 
 		P = P_Gain * e;
-		I = I_Gain * sum_e;
+		I = I_Gain * integral_e;
 		D = D_Gain * de;
 
 		MV = P + I + D;
 
-		printf("%6.2f, %6.2f, %6.2f, ", e, sum_e, de);
-		printf("%6.2f, %6.2f, %6.2f, %6.2f\n", P, I, D, MV);
+		if(MV < 0){
+			MV = MIN_DUTY_CYCLE;
+		} else if(MV > 100) {
+			MV = MAX_DUTY_CYCLE;
+		}
+
+		printf("%6.2f, %6.2f, %6.2f, %6.2f, ", e, prev_e, de, integral_e);
+		printf("%6.2f, %6.2f, %6.2f, %6.2f", P, I, D, MV);
+
+		prev_e = e;			//Store current value to calculate rate of change for next value
 
 		vTaskDelay((configTICK_RATE_HZ));
 
