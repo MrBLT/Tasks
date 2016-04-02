@@ -77,7 +77,7 @@ extern void Task_HeaterOn( void *pvParameters ) {
 		//
 		OffTime_mS = TimeBase_mS - OnTime_mS;
 
-		printf("%6d ms, %6d ms\n", OnTime_mS, OffTime_mS);
+		printf("%6d ms\n", OnTime_mS);
 
         //
         // Set HeaterOn_H and D2 for OnTime_mS.
@@ -87,7 +87,7 @@ extern void Task_HeaterOn( void *pvParameters ) {
 		vTaskDelay( ( OnTime_mS * configTICK_RATE_HZ ) / TimeBase_mS );
 
         //
-        // Turn-off HeaterOn_H and D2 for 750 mS.
+        // Turn-off HeaterOn_H and D2 for OffTime_mS.
         //
         GPIOPinWrite( GPIO_PORTG_BASE, GPIO_PIN_0, 0x00 );
         GPIOPinWrite( GPIO_PORTN_BASE, GPIO_PIN_0, 0x00 );
