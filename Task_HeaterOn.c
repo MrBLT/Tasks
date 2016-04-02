@@ -32,11 +32,16 @@
 #include	"stdio.h"
 
 #define		TimeBase_mS		1000
-#define		OnTime_mS		750
-#define		OffTime_mS		( TimeBase_mS - OnTime_mS )
+
+//
+// Reference PID ouput
+//
+
+extern float MV;
 
 extern void Task_HeaterOn( void *pvParameters ) {
-
+	uint32_t OnTime_mS;
+	uint32_t OffTime_mS;
 	//
 	//	Enable (power-on) PortG
 	//
@@ -62,6 +67,17 @@ extern void Task_HeaterOn( void *pvParameters ) {
 						GPIO_PIN_0, GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD );
 
 	while ( 1 ) {
+		//
+		// Calculate OnTime using PID output MV
+		//
+		OnTime_mS = MV * TimeBase_mS / 100;
+
+		//
+		// Update OffTime_mS
+		//
+		OffTime_mS = TimeBase_mS - OnTime_mS;
+
+		printf("%6d ms, %6d ms\n", OnTime_mS, OffTime_mS);
 
         //
         // Set HeaterOn_H and D2 for OnTime_mS.
@@ -76,5 +92,6 @@ extern void Task_HeaterOn( void *pvParameters ) {
         GPIOPinWrite( GPIO_PORTG_BASE, GPIO_PIN_0, 0x00 );
         GPIOPinWrite( GPIO_PORTN_BASE, GPIO_PIN_0, 0x00 );
 		vTaskDelay( ( OffTime_mS * configTICK_RATE_HZ ) / TimeBase_mS );
+
 	}
 }
