@@ -34,7 +34,7 @@ extern void Task_Temp_Calc( void *pvParameters ) {
 	while ( 1 ) {
 		while(ADC_Value_Avg == 0){};
 		Current_Temp = 91.9307 - (30.4555*Get_Voltage(ADC_Value_Avg));
-		printf("%4.3f\n", Current_Temp);
+		printf("%4.3f, ", Current_Temp);
 		vTaskDelay( (configTICK_RATE_HZ) );
 	}
 }

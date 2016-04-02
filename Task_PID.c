@@ -4,6 +4,8 @@
  *  Created on: Apr 1, 2016
  *      Author: Brice Thrower
  *
+ * 		Organization:	KU/EECS/EECS 690
+ *
  *      Description: PID module to adjust duty cycle for a heater to control temperature
  *
  *      Notes:	This module will continuously calculate an error value (e) as
@@ -12,9 +14,10 @@
  *      	to minimize the error over time by adjusting the duty cycle (Manipulated
  *      	Variable MV) using a weighted sum.
  *
- *      Inputs:
+ *      Inputs: desired temperature (SP)
+ *      		current temperature (PV)
  *
- *      Output:
+ *      Output: duty cycle (MV)
  *
  */
 
@@ -55,6 +58,49 @@
 	                           depending on how fast the error is approaching zero
 				   
 		D = D_Gain * (derivative or rate of change of e)
-
-	    
  */
+
+#include	"FreeRTOS.h"
+#include	"task.h"
+
+#include	"stdio.h"
+
+//
+// Global Subroutines and Variables
+//
+
+// Reference Desired Temp and Current Temp
+float Desired_Temp = 31.5;
+extern float Current_Temp;
+
+// Initiate global output duty cycle
+float MV;
+float P_Gain = 1.1;
+float I_Gain = 1;
+float D_Gain = 1;
+
+extern void Task_PID( void *pvParameters ) {
+
+	float SP, PV, e, sum_e, de, prev_e = 0, P, I, D;
+
+	while (1) {
+
+		SP = Desired_Temp;
+		PV = Current_Temp;
+		e  = SP - PV;
+		sum_e += e;
+		de = e - prev_e;
+		prev_e = e;
+
+		P = P_Gain * e;
+		I = I_Gain * sum_e;
+		D = D_Gain * de;
+
+		MV = P + I + D;
+
+		printf("%6.2f, %6.2f, %6.2f, %6.2f, %6.2f, %6.2f\n", e, sum_e, de, P, I, D);
+		vTaskDelay((configTICK_RATE_HZ));
+
+	}
+}
+
