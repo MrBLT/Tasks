@@ -20,10 +20,6 @@
 //
 float Current_Temp;
 extern uint32_t ADC_Value_Avg;
-//
-//	Reference SysTickCount
-//
-extern volatile uint32_t xPortSysTickCount;
 
 float Get_Voltage(uint32_t ADC_Value_Avg){
 	return ((ADC_Value_Avg*3.3)/4095);
