@@ -100,7 +100,6 @@ extern void Task_PID( void *pvParameters ) {
 
 		printf("%6.2f, %6.2f, %6.2f, ", e, sum_e, de);
 		printf("%6.2f, %6.2f, %6.2f, %6.2f\n", P, I, D, MV);
-		printf("%6.2f, %6.2f, %6.2f, %6.2f, %6.2f, %6.2f\n", e, sum_e, de, P, I, D);
 
 		vTaskDelay((configTICK_RATE_HZ));
 
