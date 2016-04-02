@@ -47,6 +47,9 @@ extern void Task_Simple_ADC0_Ch0( void *pvParameters ) {
 	uint32_t 		ADC_Value_Position = 0;
 	uint32_t 		i;
 	uint32_t 		sum;
+	float alpha = 0.3;
+	uint32_t Old_ADC_Value_Avg = 0;
+
 
 	//
 	//	Enable (power-on) ADC0
@@ -84,7 +87,7 @@ extern void Task_Simple_ADC0_Ch0( void *pvParameters ) {
 		//
 		ADCSequenceDataGet(ADC0_BASE, 0, &ADC_Value);
 		ADCIntClear( ADC0_BASE, 0 );
-
+/*
 		//
 		// Insert the value into a position in the array
 		//
@@ -106,12 +109,22 @@ extern void Task_Simple_ADC0_Ch0( void *pvParameters ) {
 			ADC_Value_Array[ADC_Value_Position] = ADC_Value;
 			ADC_Value_Position++;
 		}
+*/
+		//
+		// Update Running Average
+		//
+		if(Old_ADC_Value_Avg == 0){
+			ADC_Value_Avg = ADC_Value;
+		} else {
+			ADC_Value_Avg = alpha*ADC_Value + (1 - alpha)*Old_ADC_Value_Avg;
+		}
 
+		Old_ADC_Value_Avg = ADC_Value_Avg;
 
-
+		printf("%6d, ", ADC_Value_Avg);
 		//
 		//	Delay 100 ms.
 		//
-		vTaskDelay( (configTICK_RATE_HZ) / 10 );
+		vTaskDelay( (configTICK_RATE_HZ) );
 	}
 }
