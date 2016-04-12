@@ -86,6 +86,7 @@ extern void Task_HeaterOn( void *pvParameters ) {
         GPIOPinWrite( GPIO_PORTN_BASE, GPIO_PIN_0, 0x01 );
 		vTaskDelay( ( OnTime_mS * configTICK_RATE_HZ ) / TimeBase_mS );
 
+
         //
         // Turn-off HeaterOn_H and D2 for OffTime_mS.
         //

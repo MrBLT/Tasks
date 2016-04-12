@@ -43,10 +43,10 @@ extern void Task_Simple_ADC0_Ch0( void *pvParameters ) {
 	//	Measured voltage value
 	//
 	uint32_t	ADC_Value;
-	uint32_t	ADC_Value_Array[10];
+	/*uint32_t	ADC_Value_Array[10];
 	uint32_t 		ADC_Value_Position = 0;
 	uint32_t 		i;
-	uint32_t 		sum;
+	uint32_t 		sum;*/
 	float alpha = 0.3;
 	uint32_t Old_ADC_Value_Avg = 0;
 
@@ -121,7 +121,7 @@ extern void Task_Simple_ADC0_Ch0( void *pvParameters ) {
 
 		Old_ADC_Value_Avg = ADC_Value_Avg;
 
-		printf("%6d, ", ADC_Value_Avg);
+		//printf("%6d, ", ADC_Value_Avg);
 		//
 		//	Delay 100 ms.
 		//

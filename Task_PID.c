@@ -72,12 +72,12 @@
 //
 
 // Reference Desired Temp and Current Temp
-float Desired_Temp = 30;
+float Desired_Temp = 40;
 extern float Current_Temp;
 
 // Initiate global output duty cycle
 float MV;
-float P_Gain = 10;
+float P_Gain = 100;
 float I_Gain = 0;
 float D_Gain = 0;
 
@@ -105,8 +105,8 @@ extern void Task_PID( void *pvParameters ) {
 			MV = MAX_DUTY_CYCLE;
 		}
 
-		printf("%6.2f, %6.2f, %6.2f, %6.2f, ", e, prev_e, de, integral_e);
-		printf("%6.2f, %6.2f, %6.2f, %6.2f", P, I, D, MV);
+		//printf("%6.2f, %6.2f, %6.2f, %6.2f, ", e, prev_e, de, integral_e);
+		printf("%6.2f, %6.2f, %6.2f, %6.2f,", P, I, D, MV);
 
 		prev_e = e;			//Store current value to calculate rate of change for next value
 
